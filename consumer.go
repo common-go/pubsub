@@ -1,9 +1,8 @@
 package pubsub
 
 import (
-	"context"
-
 	"cloud.google.com/go/pubsub"
+	"context"
 	"github.com/common-go/mq"
 	"github.com/sirupsen/logrus"
 )
