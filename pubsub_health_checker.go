@@ -16,7 +16,7 @@ const (
 	PermissionSubscribe PermissionType = 1
 )
 
-type PubSubHealthService struct {
+type PubSubHealthChecker struct {
 	name           string
 	client         *pubsub.Client
 	timeout        time.Duration
@@ -24,15 +24,15 @@ type PubSubHealthService struct {
 	resourceId     string
 }
 
-func NewPubSubHealthService(name string, client *pubsub.Client, timeout time.Duration, permissionType PermissionType, resourceId string) *PubSubHealthService {
-	return &PubSubHealthService{name, client, timeout, permissionType, resourceId}
+func NewPubSubHealthChecker(name string, client *pubsub.Client, timeout time.Duration, permissionType PermissionType, resourceId string) *PubSubHealthChecker {
+	return &PubSubHealthChecker{name, client, timeout, permissionType, resourceId}
 }
 
-func (h *PubSubHealthService) Name() string {
+func (h *PubSubHealthChecker) Name() string {
 	return h.name
 }
 
-func (h *PubSubHealthService) Check(ctx context.Context) (map[string]interface{}, error) {
+func (h *PubSubHealthChecker) Check(ctx context.Context) (map[string]interface{}, error) {
 	res := make(map[string]interface{})
 	var permissions []string
 	var err error
@@ -45,7 +45,7 @@ func (h *PubSubHealthService) Check(ctx context.Context) (map[string]interface{}
 	}
 
 	if err != nil {
-		logrus.Errorf("Can't TestPermissions %h: %h", h.resourceId, err.Error())
+		logrus.Errorf("Can't TestPermissions %s: %s", h.resourceId, err.Error())
 		return res, err
 	} else if len(permissions) != 1 {
 		return res, fmt.Errorf("invalid permissions: %v", permissions)
@@ -54,7 +54,7 @@ func (h *PubSubHealthService) Check(ctx context.Context) (map[string]interface{}
 	}
 }
 
-func (h *PubSubHealthService) Build(ctx context.Context, data map[string]interface{}, err error) map[string]interface{} {
+func (h *PubSubHealthChecker) Build(ctx context.Context, data map[string]interface{}, err error) map[string]interface{} {
 	if err == nil {
 		return data
 	}
