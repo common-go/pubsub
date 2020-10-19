@@ -66,10 +66,10 @@ func CheckPermission(ctx0 context.Context, iam *iam.Handle, permission string) {
 		logrus.Infof("Checking permission: %s", permission)
 	}
 	if permissions, err := iam.TestPermissions(ctx, []string{permission}); err != nil {
-		logrus.Fatalf("Can't check permission %s: %v", permission, err)
+		logrus.Fatalf("Can't check permission %v: %s", permission, err.Error())
 	} else if len(permissions) > 0 && permissions[0] == permission {
-		logrus.Warn("Permission %s valid", permission)
+		logrus.Warnf("Permission %v valid", permission)
 	} else {
-		logrus.Fatalf("Permission %s invalid", permission)
+		logrus.Fatalf("Permission %v invalid", permission)
 	}
 }
