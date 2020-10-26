@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"cloud.google.com/go/pubsub"
-	"github.com/sirupsen/logrus"
 )
 
 type PermissionType int
@@ -45,7 +44,6 @@ func (h *PubSubHealthChecker) Check(ctx context.Context) (map[string]interface{}
 	}
 
 	if err != nil {
-		logrus.Errorf("Can't TestPermissions %s: %s", h.resourceId, err.Error())
 		return res, err
 	} else if len(permissions) != 1 {
 		return res, fmt.Errorf("invalid permissions: %v", permissions)

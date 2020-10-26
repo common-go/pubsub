@@ -4,6 +4,7 @@ type ConsumerConfig struct {
 	SubscriptionId     string             `mapstructure:"subscription_id"`
 	Client             ClientConfig       `mapstructure:"client"`
 	SubscriptionConfig SubscriptionConfig `mapstructure:"subscription"`
+	Retry              RetryConfig        `mapstructure:"retry"`
 }
 
 type SubscriptionConfig struct {

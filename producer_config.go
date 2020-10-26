@@ -4,6 +4,7 @@ type ProducerConfig struct {
 	TopicId string       `mapstructure:"topic_id"`
 	Client  ClientConfig `mapstructure:"client"`
 	Topic   TopicConfig  `mapstructure:"topic"`
+	Retry   RetryConfig  `mapstructure:"retry"`
 }
 
 type TopicConfig struct {

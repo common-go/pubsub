@@ -4,7 +4,6 @@ import (
 	"cloud.google.com/go/pubsub"
 	"context"
 	"github.com/common-go/mq"
-	"github.com/sirupsen/logrus"
 )
 
 type Consumer struct {
@@ -19,11 +18,20 @@ func NewConsumer(client *pubsub.Client, subscriptionId string, c SubscriptionCon
 }
 
 func NewConsumerByConfig(ctx context.Context, c ConsumerConfig, ackOnConsume bool) (*Consumer, error) {
-	client, err := NewPubSubClient(ctx, c.Client.ProjectId, c.Client.KeyFilename)
-	if err != nil {
-		return nil, err
+	if c.Retry.Retry1 <= 0 {
+		client, err := NewPubSubClient(ctx, c.Client.ProjectId, c.Client.KeyFilename)
+		if err != nil {
+			return nil, err
+		}
+		return NewConsumer(client, c.SubscriptionId, c.SubscriptionConfig, ackOnConsume), nil
+	} else {
+		durations := DurationsFromValue(c.Retry, "Retry", 9)
+		client, err := NewPubSubClientWithRetries(ctx, c.Client.ProjectId, c.Client.KeyFilename, durations)
+		if err != nil {
+			return nil, err
+		}
+		return NewConsumer(client, c.SubscriptionId, c.SubscriptionConfig, ackOnConsume), nil
 	}
-	return NewConsumer(client, c.SubscriptionId, c.SubscriptionConfig, ackOnConsume), nil
 }
 
 func ConfigureSubscription(subscription *pubsub.Subscription, c SubscriptionConfig) *pubsub.Subscription {
@@ -38,9 +46,6 @@ func ConfigureSubscription(subscription *pubsub.Subscription, c SubscriptionConf
 
 func (c *Consumer) Consume(ctx context.Context, caller mq.ConsumerCaller) {
 	er1 := c.Subscription.Receive(ctx, func(ctx2 context.Context, m *pubsub.Message) {
-		if logrus.IsLevelEnabled(logrus.DebugLevel) {
-			logrus.Debugf("Received message: %s", m.Data)
-		}
 		message := mq.Message{
 			Id:         m.ID,
 			Data:       m.Data,
