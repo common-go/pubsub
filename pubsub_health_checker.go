@@ -23,10 +23,24 @@ type PubSubHealthChecker struct {
 	resourceId     string
 }
 
-func NewPubSubHealthChecker(name string, client *pubsub.Client, timeout time.Duration, permissionType PermissionType, resourceId string) *PubSubHealthChecker {
-	return &PubSubHealthChecker{name, client, timeout, permissionType, resourceId}
+func NewPubSubHealthChecker(name string, client *pubsub.Client, resourceId string, permissionType PermissionType, timeout ...time.Duration) *PubSubHealthChecker {
+	if len(timeout) >= 1 {
+		return &PubSubHealthChecker{name: name, client: client, permissionType: permissionType, resourceId: resourceId, timeout: timeout[0]}
+	}
+	return &PubSubHealthChecker{name: name, client: client, permissionType: permissionType, resourceId: resourceId, timeout: 4 * time.Second}
 }
-
+func NewPubHealthChecker(name string, client *pubsub.Client, resourceId string, timeout ...time.Duration) *PubSubHealthChecker {
+	if len(timeout) >= 1 {
+		return &PubSubHealthChecker{name: name, client: client, permissionType: PermissionPublish, resourceId: resourceId, timeout: timeout[0]}
+	}
+	return &PubSubHealthChecker{name: name, client: client, permissionType: PermissionPublish, resourceId: resourceId, timeout: 4 * time.Second}
+}
+func NewSubHealthChecker(name string, client *pubsub.Client, resourceId string, timeout ...time.Duration) *PubSubHealthChecker {
+	if len(timeout) >= 1 {
+		return &PubSubHealthChecker{name: name, client: client, permissionType: PermissionSubscribe, resourceId: resourceId, timeout: timeout[0]}
+	}
+	return &PubSubHealthChecker{name: name, client: client, permissionType: PermissionSubscribe, resourceId: resourceId, timeout: 4 * time.Second}
+}
 func (h *PubSubHealthChecker) Name() string {
 	return h.name
 }

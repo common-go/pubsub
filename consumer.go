@@ -44,7 +44,7 @@ func ConfigureSubscription(subscription *pubsub.Subscription, c SubscriptionConf
 	return subscription
 }
 
-func (c *Consumer) Consume(ctx context.Context, caller mq.ConsumerCaller) {
+func (c *Consumer) Consume(ctx context.Context, handle func(context.Context, *mq.Message, error) error) {
 	er1 := c.Subscription.Receive(ctx, func(ctx2 context.Context, m *pubsub.Message) {
 		message := mq.Message{
 			Id:         m.ID,
@@ -55,9 +55,9 @@ func (c *Consumer) Consume(ctx context.Context, caller mq.ConsumerCaller) {
 		if c.AckOnConsume {
 			m.Ack()
 		}
-		caller.Call(ctx2, &message, nil)
+		handle(ctx2, &message, nil)
 	})
 	if er1 != nil {
-		caller.Call(ctx, nil, er1)
+		handle(ctx, nil, er1)
 	}
 }

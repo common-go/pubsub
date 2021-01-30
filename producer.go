@@ -55,13 +55,13 @@ func ConfigureTopic(topic *pubsub.Topic, c TopicConfig) *pubsub.Topic {
 	return topic
 }
 
-func (c *Producer) Produce(ctx context.Context, data []byte, messageAttributes *map[string]string) (string, error) {
+func (c *Producer) Produce(ctx context.Context, data []byte, messageAttributes map[string]string) (string, error) {
 	msg := &pubsub.Message{
 		Data: data,
 	}
 
 	if messageAttributes != nil {
-		msg.Attributes = *messageAttributes
+		msg.Attributes = messageAttributes
 	}
 
 	publishResult := c.Topic.Publish(ctx, msg)
