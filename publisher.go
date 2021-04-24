@@ -11,31 +11,31 @@ import (
 
 var CheckTopicPermission = CheckPermission
 
-type Producer struct {
+type Publisher struct {
 	Client *pubsub.Client
 	Topic  *pubsub.Topic
 }
 
-func NewProducer(ctx context.Context, client *pubsub.Client, topicId string, c TopicConfig) *Producer {
+func NewPublisher(ctx context.Context, client *pubsub.Client, topicId string, c TopicConfig) *Publisher {
 	topic := client.Topic(topicId)
 	CheckTopicPermission(ctx, topic.IAM(), "pubsub.topics.publish")
-	return &Producer{Client: client, Topic: ConfigureTopic(topic, c)}
+	return &Publisher{Client: client, Topic: ConfigureTopic(topic, c)}
 }
 
-func NewProducerByConfig(ctx context.Context, c ProducerConfig) (*Producer, error) {
+func NewPublisherByConfig(ctx context.Context, c PublisherConfig) (*Publisher, error) {
 	if c.Retry.Retry1 <= 0 {
 		client, err := NewPubSubClient(ctx, c.Client.ProjectId, c.Client.KeyFilename)
 		if err != nil {
 			return nil, err
 		}
-		return NewProducer(ctx, client, c.TopicId, c.Topic), nil
+		return NewPublisher(ctx, client, c.TopicId, c.Topic), nil
 	} else {
 		durations := DurationsFromValue(c.Retry, "Retry", 9)
 		client, err := NewPubSubClientWithRetries(ctx, c.Client.ProjectId, c.Client.KeyFilename, durations)
 		if err != nil {
 			return nil, err
 		}
-		return NewProducer(ctx, client, c.TopicId, c.Topic), nil
+		return NewPublisher(ctx, client, c.TopicId, c.Topic), nil
 	}
 }
 
@@ -55,13 +55,13 @@ func ConfigureTopic(topic *pubsub.Topic, c TopicConfig) *pubsub.Topic {
 	return topic
 }
 
-func (c *Producer) Produce(ctx context.Context, data []byte, messageAttributes map[string]string) (string, error) {
+func (c *Publisher) Publish(ctx context.Context, data []byte, attributes map[string]string) (string, error) {
 	msg := &pubsub.Message{
 		Data: data,
 	}
 
-	if messageAttributes != nil {
-		msg.Attributes = messageAttributes
+	if attributes != nil {
+		msg.Attributes = attributes
 	}
 
 	publishResult := c.Topic.Publish(ctx, msg)
