@@ -1,11 +1,10 @@
 package pubsub
 
 import (
+	"cloud.google.com/go/pubsub"
 	"context"
 	"fmt"
 	"time"
-
-	"cloud.google.com/go/pubsub"
 )
 
 type PermissionType int
@@ -69,6 +68,9 @@ func (h *HealthChecker) Check(ctx context.Context) (map[string]interface{}, erro
 func (h *HealthChecker) Build(ctx context.Context, data map[string]interface{}, err error) map[string]interface{} {
 	if err == nil {
 		return data
+	}
+	if data == nil {
+		data = make(map[string]interface{}, 0)
 	}
 	data["error"] = err.Error()
 	return data
