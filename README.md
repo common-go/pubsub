@@ -25,7 +25,7 @@ Common use cases include event-driven architectures, log collection, and streami
 - <b>Benefit</b>: Enables real-time data processing and analytics, providing timely insights and actions.
 
 ### Libraries for Google Pub/Sub
-- GO: [pubsub](https://github.com/core-go/pubsub). Example is at [go-subscription](https://github.com/project-samples/go-subscription)
+- GO: [pubsub](https://github.com/core-go/pubsub). Example is at [go-pubsub-sample](https://github.com/project-samples/go-pubsub-sample)
 - nodejs: [pubsub](https://github.com/core-ts/pubsub). Example is at [pubsub-sample](https://github.com/typescript-tutorial/pubsub-sample)
 
 #### A common flow to consume a message from a message queue
