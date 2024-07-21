@@ -6,6 +6,16 @@ A fully managed messaging service that allows for event-driven systems and real-
 - <b>Flexibility</b>: Supports both push and pull delivery models.
 - <b>Integration</b>: Easily integrates with other Google Cloud services.
 
+### Libraries for Google Pub/Sub
+- GO: [pubsub](https://github.com/core-go/pubsub), to wrap and simplify [pubsub](https://pkg.go.dev/cloud.google.com/go/pubsub). Example is at [go-pubsub-sample](https://github.com/project-samples/go-pubsub-sample)
+- nodejs: [google-pubsub](https://www.npmjs.com/package/google-pubsub), to wrap and simplify [@google-cloud/pubsub](https://www.npmjs.com/package/@google-cloud/pubsub). Example is at [pubsub-sample](https://github.com/typescript-tutorial/pubsub-sample)
+
+#### A common flow to consume a message from a message queue
+![A common flow to consume a message from a message queue](https://cdn-images-1.medium.com/max/800/1*Y4QUN6QnfmJgaKigcNHbQA.png)
+- The libraries to implement this flow are:
+  - [mq](https://github.com/core-go/mq) for GOLANG. Example is at [go-pubsub-sample](https://github.com/project-samples/go-pubsub-sample)
+  - [mq-one](https://www.npmjs.com/package/mq-one) for nodejs. Example is at [pubsub-sample](https://github.com/typescript-tutorial/pubsub-sample)
+
 ### Use Cases of Google Pub/Sub
 Common use cases include event-driven architectures, log collection, and streaming analytics.
 
@@ -23,16 +33,6 @@ Common use cases include event-driven architectures, log collection, and streami
 #### Streaming analytics
 - <b>Scenario</b>: Collecting and analyzing data streams from various sources like IoT devices, social media, or user activity.
 - <b>Benefit</b>: Enables real-time data processing and analytics, providing timely insights and actions.
-
-### Libraries for Google Pub/Sub
-- GO: [pubsub](https://github.com/core-go/pubsub). Example is at [go-pubsub-sample](https://github.com/project-samples/go-pubsub-sample)
-- nodejs: [pubsub](https://github.com/core-ts/pubsub). Example is at [pubsub-sample](https://github.com/typescript-tutorial/pubsub-sample)
-
-#### A common flow to consume a message from a message queue
-![A common flow to consume a message from a message queue](https://cdn-images-1.medium.com/max/800/1*Y4QUN6QnfmJgaKigcNHbQA.png)
-- The libraries to implement this flow are:
-  - [mq](https://github.com/core-go/mq) for GOLANG. Example is at [go-subscription](https://github.com/project-samples/go-subscription)
-  - [mq-one](https://www.npmjs.com/package/mq-one) for nodejs. Example is at [pubsub-sample](https://github.com/typescript-tutorial/pubsub-sample)
 
 ### Comparison of Google Pub/Sub, Amazon SQS, and Apache Kafka
 #### Google Pub/Sub:
